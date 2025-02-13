@@ -12,21 +12,44 @@
       ];
       const cart = {};
       const addToCart = (id) => {
+        
         cart[id] = 1;
+        // cart[id] += cart[id] ;
         console.log(cart);
         showCart();
       };
-
+       const increment = (id)=>{
+        cart[id]++;
+        showCart();
+       };
+         const decrement = (id)=>{
+          if(cart[id]>1){
+             cart[id]--;
+          }else{
+             delete cart[id];
+          }
+          showCart();
+         };
+         const calculateTotal = ()=>{
+           let total = 0;
+           products.map((value)=>{
+             if(cart[value.id]){
+               total += value.price*cart[value.id];
+             }
+           });
+           return total;
+         };
       const showCart = () => {
         let str = "";
         products.map((value) => {
           if (cart[value.id]) {
             str += `
-            <li>${value.name}-$${value.price}-<button>-</button>${cart[value.id]}<button>+</button>-${value.price*cart[value.id]}</li>
+            <li>${value.name}-$${value.price}-<button onclick='decrement(${value.id})'>-</button>${cart[value.id]}<button onClick='increment(${value.id})'>+</button>-$${value.price*cart[value.id]}</li>
             `;
           }
         });
         divCart.innerHTML = str;
+        divTotal.innerHTML = `<h3>Total: $${calculateTotal()}</h3>`;
       };
       const showProducts = () => {
         let str = "";
@@ -46,5 +69,6 @@
     <div id="divProducts"></div>
     <h3>My Cart</h3>
     <div id="divCart"></div>
+    <div id="divTotal"></div>
   </body>
 </html>
